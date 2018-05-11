@@ -1,10 +1,11 @@
-const speedtest = require('./speedtest');
+const googlefiber = require('./googlefiber');
 
-describe('#providers // speedtest', function () {
+describe('#providers // googlefiber', function () {
   it('test', async function () {
     jest.setTimeout(60000);
 
-    const result = await speedtest.test();
+    const result = await googlefiber.test();
+    console.log(result);
 
     expect(result).toHaveProperty('down');
     expect(result.down).toHaveProperty('speed');

@@ -6,7 +6,7 @@ const URL = 'https://fast.com';
 
 function readSpeedFactory(page) {
   return async function readSpeed() {
-    const result = await page.evaluate(() => {
+    const down = await page.evaluate(() => {
       const $ = document.querySelector.bind(document); // eslint-disable-line
 
       return {
@@ -16,27 +16,29 @@ function readSpeedFactory(page) {
       };
     });
 
-    if (!result.isDone) {
+    if (!down.isDone) {
       await delay(100);
       return readSpeed(page);
     }
-    return result;
+    return {down};
   };
 }
 
 async function test() {
   const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto(URL);
 
-  const readSpeed = readSpeedFactory(page);
-  const {speed, unit} = await readSpeed();
+  try {
+    const page = await browser.newPage();
+    await page.goto(URL);
 
-  await browser.close();
-
-  return {
-    down: {speed, unit}
-  };
+    const readSpeed = readSpeedFactory(page);
+    const result = await readSpeed();
+    return result;
+  } catch (err) {
+    throw err;
+  } finally {
+    await browser.close();
+  }
 }
 
 module.exports = {

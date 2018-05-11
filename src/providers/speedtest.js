@@ -23,52 +23,46 @@ function readSpeedFactory(page) {
     }
   }
 
-  function getSpeedFactory(element) {
-    return async function () {
-      return page.evaluate(elem => {
-        const $ = document.querySelector.bind(document); // eslint-disable-line
+  async function getSpeedFromElement(element) {
+    return page.evaluate(elem => {
+      const $ = document.querySelector.bind(document); // eslint-disable-line
 
-        return {
-          speed: Number($(`.result-data > .${elem}`).textContent),
-          unit: $(`.result-data > .${elem} + .result-data-unit`).textContent.trim()
-        };
-      }, element);
-    };
+      return {
+        speed: Number($(`.result-data > .${elem}`).textContent),
+        unit: $(`.result-data > .${elem} + .result-data-unit`).textContent.trim()
+      };
+    }, element);
   }
 
   return async function readSpeed() {
     await startTest();
     await waitForTest();
 
-    const getDownloadSpeed = getSpeedFactory('download-speed');
-    const getUploadSpeed = getSpeedFactory('upload-speed');
-    const getPing = getSpeedFactory('ping-speed');
-
     const [down, up, ping] = await Promise.all([
-      getDownloadSpeed(),
-      getUploadSpeed(),
-      getPing()
+      getSpeedFromElement('download-speed'),
+      getSpeedFromElement('upload-speed'),
+      getSpeedFromElement('ping-speed')
     ]);
 
-    return {
-      down,
-      up,
-      ping
-    };
+    return {down, up, ping};
   };
 }
 
 async function test() {
   const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto(URL);
 
-  const readSpeed = readSpeedFactory(page);
-  const {down, up, ping} = await readSpeed();
+  try {
+    const page = await browser.newPage();
+    await page.goto(URL);
 
-  await browser.close();
-
-  return {down, up, ping};
+    const readSpeed = readSpeedFactory(page);
+    const result = await readSpeed();
+    return result;
+  } catch (err) {
+    throw err;
+  } finally {
+    await browser.close();
+  }
 }
 
 module.exports = {

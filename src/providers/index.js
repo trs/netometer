@@ -1,4 +1,5 @@
 module.exports = {
   fast: require('./fast'),
-  speedtest: require('./speedtest')
+  speedtest: require('./speedtest'),
+  googlefiber: require('./googlefiber')
 };

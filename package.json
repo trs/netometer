@@ -1,16 +1,23 @@
 {
-  "name": "net-speed-tester",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest --watch"
+  "name": "netometer",
+  "version": "0.0.1",
+  "description": "Chart internet speed tests from various providers",
+  "main": "src/index.js",
+  "bin": {
+    "netometer": "src/bin.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "scripts": {
+    "test": "jest src/*.test.js --watch",
+    "test:providers": "jest src/providers/*.test.js --watch",
+    "test:all": "jest src/**/*.test.js --watch"
+  },
+  "keywords": ["netometer", "internet", "speed", "test", "speedtest", "fast", "googlefiber"],
+  "author": "Tyler Stewart",
+  "license": "MIT",
   "dependencies": {
-    "puppeteer": "^1.3.0"
+    "ora": "^2.1.0",
+    "puppeteer": "^1.4.0",
+    "yargs": "^11.0.0"
   },
   "devDependencies": {
     "jest": "^22.4.3"
