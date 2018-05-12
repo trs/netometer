@@ -32,9 +32,9 @@ Accepts: `bps`, `kbps`, `mbps`, `gbps`, `tbps`, `pbps`
 
 #### `--format` / `-f`
 
-If true, will parse numbers into a more readable format (eg. 1000 -> 1,000).
+If true, will parse numbers into a more readable format (eg. 1000000 -> 1,000,000).
 
-Defaults to `true`.
+Defaults to `false`.
 
 ## Providers
 

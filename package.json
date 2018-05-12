@@ -11,7 +11,15 @@
     "test:providers": "jest src/providers/*.test.js --watch",
     "test:all": "jest src/**/*.test.js --watch"
   },
-  "keywords": ["netometer", "internet", "speed", "test", "speedtest", "fast", "googlefiber"],
+  "keywords": [
+    "netometer",
+    "internet",
+    "speed",
+    "test",
+    "speedtest",
+    "fast",
+    "googlefiber"
+  ],
   "author": "Tyler Stewart",
   "license": "MIT",
   "dependencies": {

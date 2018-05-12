@@ -3,7 +3,7 @@
 const yargs = require('yargs');
 const ora = require('ora');
 const providers = require('./providers');
-const netSpeedTester = require('./index');
+const netometer = require('./index');
 
 const args = yargs
   .option('provider', {
@@ -21,14 +21,20 @@ const args = yargs
   .option('format', {
     alias: 'f',
     type: 'boolean',
-    default: true,
+    default: false,
     description: 'Format numbers'
+  })
+  .option('out', {
+    alias: 'o',
+    type: 'string',
+    normalize: true,
+    description: 'Output to given file'
   })
   .parse();
 
 (async function () {
   for (const providerName of args.provider) {
-    let spinner = ora({
+    const spinner = ora({
       color: 'cyan',
       spinner: 'dots'
     });
@@ -36,7 +42,7 @@ const args = yargs
     try {
       spinner.start(`[${providerName}] Testing speed...`);
 
-      const result = await netSpeedTester.testSpeed(providerName, args);
+      const result = await netometer.testSpeed(providerName, args);
 
       const formatResult = value => value ? `${value.speed} ${value.unit}` : 'N/A';
 
@@ -45,6 +51,16 @@ const args = yargs
       const ping = formatResult(result.ping);
 
       spinner.succeed(`[${providerName}] Down: ${down} | Up: ${up} | Ping: ${ping}`);
+
+      if (args.out) {
+        await netometer.appendToJSONFile(args.out, {
+          time: Date.now(),
+          provider: providerName,
+          down: result.down,
+          up: result.up,
+          ping: result.ping
+        });
+      }
     } catch (err) {
       spinner.fail(`[${providerName}] ${err.message}`);
     } finally {

@@ -1,3 +1,9 @@
+const {promisify} = require('util');
+const fs = require('fs');
+
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
+
 const providers = require('./providers');
 const errors = require('./errors');
 
@@ -18,7 +24,7 @@ async function testSpeed(providerName, {unit, format = false} = {}) {
 
   const formatResult = value => {
     if (!value) return null;
-    const speed = format ? getReadableNumber(value.speed) : value.speed;
+    const speed = format ? getReadableNumber(value.speed) : parseFloat(value.speed);
     const displayUnit = unit || value.unit;
     return {speed, unit: displayUnit};
   };
@@ -63,9 +69,20 @@ function convertSpeed(value, fromUnit, toUnit) {
   }
 }
 
+async function appendToJSONFile(path, data) {
+  data = Array.isArray(data) ? data : [data];
+  if (fs.existsSync(path)) {
+    const existingData = JSON.parse(await readFile(path));
+    data = [...existingData, ...data];
+  }
+
+  await writeFile(path, JSON.stringify(data, null, 2));
+}
+
 module.exports = {
   testSpeed,
 
   convertSpeed,
-  getReadableNumber
+  getReadableNumber,
+  appendToJSONFile
 };
