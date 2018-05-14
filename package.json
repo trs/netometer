@@ -1,11 +1,9 @@
 {
   "name": "netometer",
-  "version": "0.0.1",
-  "description": "Chart internet speed tests from various providers",
+  "version": "0.0.3",
+  "description": "Run speed tests from your command line.",
   "main": "src/index.js",
-  "bin": {
-    "netometer": "src/bin.js"
-  },
+  "bin": "src/bin.js",
   "scripts": {
     "test": "jest src/*.test.js --watch",
     "test:providers": "jest src/providers/*.test.js --watch",
@@ -21,6 +19,14 @@
     "googlefiber"
   ],
   "author": "Tyler Stewart",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trs/netometer.git"
+  },
+  "homepage": "https://github.com/trs/netometer#readme",
+  "bugs": {
+    "url": "https://github.com/trs/netometer/issues"
+  },
   "license": "MIT",
   "dependencies": {
     "ora": "^2.1.0",
