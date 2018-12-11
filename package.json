@@ -5,9 +5,9 @@
   "main": "src/index.js",
   "bin": "src/bin.js",
   "scripts": {
-    "test": "jest src/*.test.js --watch",
+    "test": "jest src/*.test.js",
     "test:providers": "jest src/providers/*.test.js --watch",
-    "test:all": "jest src/**/*.test.js --watch"
+    "test:watch": "jest src/**/*.test.js --watch"
   },
   "keywords": [
     "netometer",
@@ -29,11 +29,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "ora": "^2.1.0",
-    "puppeteer": "^1.4.0",
-    "yargs": "^11.0.0"
+    "ora": "^3.0.0",
+    "puppeteer": "^1.11.0",
+    "yargs": "^12.0.5"
   },
   "devDependencies": {
-    "jest": "^22.4.3"
+    "eslint": "^5.10.0",
+    "jest": "^23.6.0"
   }
 }

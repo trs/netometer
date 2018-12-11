@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer');
-
 const {delay} = require('../helpers');
 
 const URL = 'http://www.speedtest.net/';
@@ -12,12 +11,13 @@ function readSpeedFactory(page) {
 
   async function waitForTest() {
     const style = await page.evaluate(() => {
-      const $ = document.querySelector.bind(document); // eslint-disable-line
+      // eslint-disable-next-line no-undef
+      const $ = document.querySelector.bind(document);
 
-      return $('.result-container-meta').style.width;
+      return $('.result-item-id').style.display;
     });
 
-    if (style === '0px') {
+    if (style === 'none') {
       await delay(100);
       return waitForTest();
     }
@@ -25,11 +25,12 @@ function readSpeedFactory(page) {
 
   async function getSpeedFromElement(element) {
     return page.evaluate(elem => {
-      const $ = document.querySelector.bind(document); // eslint-disable-line
+      // eslint-disable-next-line no-undef
+      const $ = document.querySelector.bind(document);
 
       return {
-        speed: Number($(`.result-data > .${elem}`).textContent),
-        unit: $(`.result-data > .${elem} + .result-data-unit`).textContent.trim()
+        speed: Number($(`.result-item.result-item-${elem} > .result-data > .number`).textContent),
+        unit: $(`.result-item.result-item-${elem} > .result-label > .result-data-unit`).textContent.trim()
       };
     }, element);
   }
@@ -39,9 +40,9 @@ function readSpeedFactory(page) {
     await waitForTest();
 
     const [down, up, ping] = await Promise.all([
-      getSpeedFromElement('download-speed'),
-      getSpeedFromElement('upload-speed'),
-      getSpeedFromElement('ping-speed')
+      getSpeedFromElement('download'),
+      getSpeedFromElement('upload'),
+      getSpeedFromElement('ping')
     ]);
 
     return {down, up, ping};
