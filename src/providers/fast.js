@@ -5,22 +5,41 @@ const {delay} = require('../helpers');
 const URL = 'https://fast.com';
 
 function readSpeedFactory(page) {
-  return async function readSpeed() {
-    const down = await page.evaluate(() => {
-      const $ = document.querySelector.bind(document); // eslint-disable-line
+  async function waitForElement(element) {
+    const success = Boolean(await page.$(`#${element}-value.succeeded`));
+
+    if (!success) {
+      await delay(100);
+      return waitForElement(element);
+    }
+  }
+
+  async function getSpeedFromElement(element) {
+    return page.evaluate(elem => {
+      // eslint-disable-next-line no-undef
+      const $ = document.querySelector.bind(document);
 
       return {
-        speed: Number($('#speed-value').textContent),
-        unit: $('#speed-units').textContent.trim(),
-        isDone: Boolean($('#speed-value.succeeded'))
+        value: Number($(`#${elem}-value`).textContent),
+        unit: $(`#${elem}-units`).textContent.trim(),
       };
-    });
+    }, element);
+  }
 
-    if (!down.isDone) {
-      await delay(100);
-      return readSpeed(page);
-    }
-    return {down};
+  async function waitGetSpeedFromElement(element) {
+    await waitForElement(element);
+    const result = await getSpeedFromElement(element);
+    return result;
+  }
+
+  return async function readSpeed() {
+    const [down, up, ping] = await Promise.all([
+      waitGetSpeedFromElement('speed'),
+      waitGetSpeedFromElement('upload'),
+      waitGetSpeedFromElement('latency')
+    ]);
+
+    return {down, up, ping};
   };
 }
 

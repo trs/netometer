@@ -44,7 +44,7 @@ const args = yargs
 
       const result = await netometer.testSpeed(providerName, args);
 
-      const formatResult = value => value ? `${value.speed} ${value.unit}` : 'N/A';
+      const formatResult = result => result ? `${result.value} ${result.unit}` : 'N/A';
 
       const down = formatResult(result.down);
       const up = formatResult(result.up);

@@ -5,16 +5,17 @@ describe('#providers // googlefiber', function () {
     jest.setTimeout(60000);
 
     const result = await googlefiber.test();
-    console.log(result);
 
     expect(result).toHaveProperty('down');
-    expect(result.down).toHaveProperty('speed');
+    expect(result.down).toHaveProperty('value');
     expect(result.down).toHaveProperty('unit');
 
     expect(result).toHaveProperty('up');
-    expect(result.up).toHaveProperty('speed');
+    expect(result.up).toHaveProperty('value');
     expect(result.up).toHaveProperty('unit');
 
     expect(result).toHaveProperty('ping');
+    expect(result.ping).toHaveProperty('value');
+    expect(result.ping).toHaveProperty('unit');
   });
 });
