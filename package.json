@@ -6,8 +6,7 @@
   "bin": "src/bin.js",
   "scripts": {
     "test": "jest src/*.test.js",
-    "test:providers": "jest src/providers/*.test.js --watch",
-    "test:watch": "jest src/**/*.test.js --watch"
+    "test:providers": "jest src/providers/*.test.js"
   },
   "keywords": [
     "netometer",

@@ -10,14 +10,14 @@ function readSpeedFactory(page) {
   }
 
   async function waitForTest() {
-    const style = await page.evaluate(() => {
+    const success = await page.evaluate(() => {
       // eslint-disable-next-line no-undef
       const $ = document.querySelector.bind(document);
 
-      return $('.result-item-id').style.display;
+      return $('.result-item-id').style.display !== 'none';
     });
 
-    if (style === 'none') {
+    if (!success) {
       await delay(100);
       return waitForTest();
     }
@@ -29,7 +29,7 @@ function readSpeedFactory(page) {
       const $ = document.querySelector.bind(document);
 
       return {
-        speed: Number($(`.result-item.result-item-${elem} > .result-data > .number`).textContent),
+        value: Number($(`.result-item.result-item-${elem} > .result-data > .number`).textContent),
         unit: $(`.result-item.result-item-${elem} > .result-label > .result-data-unit`).textContent.trim()
       };
     }, element);
